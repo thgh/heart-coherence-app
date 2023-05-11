@@ -4,6 +4,8 @@ import { isEmpty } from 'aetherspace/utils/commonUtils'
 // -i- Auto generated with "yarn document-components"
 // Components hooking into the storybook auto-documentation script
 import { HomeScreen, getDocumentationProps as getHomeScreenProps } from '../../../../../features/app-core/screens/HomeScreen.tsx'
+import { ReportScreen, getDocumentationProps as getReportScreenProps } from '../../../../../features/app-core/screens/ReportScreen.tsx'
+import { SessionScreen, getDocumentationProps as getSessionScreenProps } from '../../../../../features/app-core/screens/SessionScreen.tsx'
 // Mocks
 import StoryContextProviders from '../../../../../features/app-core/mocks/StoryContextProviders'
 
@@ -38,6 +40,54 @@ import { HomeScreen } from 'features/app-core/screens/HomeScreen'
 </Canvas>
 
 {!isEmpty(HomeScreenConfig.args) && <ArgsTable story="HomeScreen" />}
+
+
+## ReportScreen
+
+export const ReportScreenDocs = createDocs(ReportScreen)
+export const ReportScreenConfig = aetherStoryDocs({ ReportScreen }, getReportScreenProps)
+
+```typescript
+import { ReportScreen } from 'features/app-core/screens/ReportScreen'
+```
+
+
+<Canvas>
+    <Story
+        name="ReportScreen"
+        args={ReportScreenConfig.args}
+        argTypes={ReportScreenConfig.argTypes}
+    >
+      {ReportScreenDocs.bind({})}
+    </Story>
+</Canvas>
+
+{!isEmpty(ReportScreenConfig.args) && <ArgsTable story="ReportScreen" />}
+
+
+## SessionScreen
+
+export const SessionScreenDocs = createDocs(SessionScreen)
+export const SessionScreenConfig = aetherStoryDocs({ SessionScreen }, getSessionScreenProps)
+
+```typescript
+import { SessionScreen } from 'features/app-core/screens/SessionScreen'
+```
+
+
+<Canvas>
+    <Story
+        name="SessionScreen"
+        args={SessionScreenConfig.args}
+        argTypes={SessionScreenConfig.argTypes}
+    >
+      {SessionScreenDocs.bind({})}
+    </Story>
+</Canvas>
+
+{!isEmpty(SessionScreenConfig.args) && <ArgsTable story="SessionScreen" />}
+
+
 
 
 

@@ -15,7 +15,7 @@ export const AetherPage = <SC extends AetherScreenConfig>(props: AetherPageProps
 
   return (
     <ScrollView
-      style={{ backgroundColor: screenConfig.backgroundColor || 'transparent' }}
+      style={{ backgroundColor: screenConfig?.backgroundColor || 'transparent' }}
       contentContainerStyle={{ width: '100%', minHeight: '100%' }}
     >
       <PageScreen params={params} {...restProps} />

@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "privacy": "public",
     "orientation": "default",
+    "userInterfaceStyle": "dark",
     "icon": "../next/public/icon.png",
     "description": "Get insights in your heart coherence",
     "githubUrl": "https://github.com/thgh/heart-coherence-app",
@@ -26,10 +27,26 @@
       "adaptiveIcon": {
         "foregroundImage": "../next/public/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "BLUETOOTH",
+        "BLUETOOTH_ADMIN",
+        "BLUETOOTH_CONNECT",
+        "BLUETOOTH_SCAN"
+      ]
     },
     "web": {
       "favicon": "../next/public/favicon.png"
     }
-  }
+  },
+  "plugins": [
+    [
+      "@config-plugins/react-native-ble-plx",
+      {
+        "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices",
+        "bluetoothPeripheralPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices"
+      }
+    ]
+  ]
 }

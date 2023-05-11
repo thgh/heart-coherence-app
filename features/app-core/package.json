@@ -8,6 +8,7 @@
     "dependencies": {
         "@expo-google-fonts/roboto": "^0.2.3",
         "@legendapp/state": "^0.23.4",
+        "@types/web-bluetooth": "^0.0.17",
         "cors": "^2.8.5",
         "react-native-ble-plx": "^2.0.3",
         "react-native-mmkv": "^2.8.0",

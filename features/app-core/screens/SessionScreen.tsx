@@ -11,16 +11,13 @@ import { H1 } from 'aetherspace/html-elements'
 
 /* --- Schemas & Types ------------------------------------------------------------------------- */
 
-const HomePropsSchema = aetherSchema('SessionScreenProps', {})
+const SessionScreenPropsSchema = aetherSchema('SessionScreenProps', {})
 
-const HomeParamsSchema = aetherSchema('SessionScreenParams', {})
-
-export type SessionScreenProps = AetherProps<typeof HomePropsSchema>
-export type SessionScreenParams = AetherProps<typeof HomeParamsSchema>
+export type SessionScreenProps = AetherProps<typeof SessionScreenPropsSchema>
 
 /* --- <SessionScreen/> --------------------------------------------------------------------------- */
 
-export const SessionScreen = (props: AetherProps<typeof HomePropsSchema>) => {
+export const SessionScreen = (props: AetherProps<typeof SessionScreenPropsSchema>) => {
   // Hooks
   const { openLink } = useAetherNav()
 
@@ -45,7 +42,7 @@ export const SessionScreen = (props: AetherProps<typeof HomePropsSchema>) => {
 
 /* --- Documentation --------------------------------------------------------------------------- */
 
-export const getDocumentationProps = HomePropsSchema.introspect()
+export const getDocumentationProps = SessionScreenPropsSchema.introspect()
 
 /* --- Exports --------------------------------------------------------------------------------- */
 

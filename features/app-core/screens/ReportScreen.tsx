@@ -1,7 +1,7 @@
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
 // Navigation
-import { Link } from 'aetherspace/navigation'
+import { Link, useAetherNav } from 'aetherspace/navigation'
 // Schemas
 import { z, aetherSchema, AetherProps } from 'aetherspace/schemas'
 // Primitives
@@ -11,16 +11,16 @@ import { H1 } from 'aetherspace/html-elements'
 
 /* --- Schemas & Types ------------------------------------------------------------------------- */
 
-const HomePropsSchema = aetherSchema('ReportScreenProps', {})
+const ReportScreenPropSchema = aetherSchema('ReportScreenProps', {})
 
-const HomeParamsSchema = aetherSchema('ReportScreenParams', {})
-
-export type ReportScreenProps = AetherProps<typeof HomePropsSchema>
-export type ReportScreenParams = AetherProps<typeof HomeParamsSchema>
+export type ReportScreenProps = AetherProps<typeof ReportScreenPropSchema>
 
 /* --- <ReportScreen/> --------------------------------------------------------------------------- */
 
-export const ReportScreen = (props: AetherProps<typeof HomePropsSchema>) => {
+export const ReportScreen = (props: AetherProps<typeof ReportScreenPropSchema>) => {
+  // Hooks
+  const { openLink } = useAetherNav()
+
   // -- Render --
 
   return (
@@ -30,7 +30,7 @@ export const ReportScreen = (props: AetherProps<typeof HomePropsSchema>) => {
       <View class="flex-row pt-3">
         <Pressable
           class="flex-row py-1 px-2 mx-1 bg-white items-center rounded-md"
-          // onPress={() => openLink(graphQLEndpoint || '/api/graphql')}
+          onPress={() => openLink('/')}
           accessibilityRole="button"
         >
           <Text class="text-black roboto-bold text-sm">Back</Text>
@@ -42,7 +42,7 @@ export const ReportScreen = (props: AetherProps<typeof HomePropsSchema>) => {
 
 /* --- Documentation --------------------------------------------------------------------------- */
 
-export const getDocumentationProps = HomePropsSchema.introspect()
+export const getDocumentationProps = ReportScreenPropSchema.introspect()
 
 /* --- Exports --------------------------------------------------------------------------------- */
 

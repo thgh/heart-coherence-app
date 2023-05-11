@@ -1,0 +1,4 @@
+{
+  "compilerOptions": { "strictNullChecks": false },
+  "extends": "expo/tsconfig.base"
+}

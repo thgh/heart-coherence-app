@@ -12,7 +12,7 @@
   ],
   "devDependencies": {
     "@a110/storybook-expand-all": "^1.1.1",
-    "@expo/webpack-config": "^0.17.2",
+    "@expo/webpack-config": "^18",
     "@react-native-community/eslint-config": "^3.2.0",
     "@storybook/addon-controls": "^6.5.16",
     "@storybook/addon-docs": "^6.5.16",
@@ -46,7 +46,7 @@
     "@babel/core": "^7.20.0",
     "@expo/config": "^7.0.2",
     "@types/react": "~18.0.28",
-    "@expo/webpack-config": "^0.17.2"
+    "@expo/webpack-config": "^18"
   },
   "scripts": {
     "dev": "yarn turbo run next-app#dev expo-app#start",

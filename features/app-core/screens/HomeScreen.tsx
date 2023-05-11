@@ -8,6 +8,7 @@ import { z, aetherSchema, AetherProps } from 'aetherspace/schemas'
 import { View, Text, Pressable } from 'aetherspace/primitives'
 // SEO
 import { H1 } from 'aetherspace/html-elements'
+import { DevicePicker } from '../DevicePicker'
 
 /* --- Schemas & Types ------------------------------------------------------------------------- */
 
@@ -46,6 +47,7 @@ export const HomeScreen = (props: AetherProps<typeof HomePropsSchema>) => {
       >
         Github Repo
       </Link>
+      <DevicePicker />
     </View>
   )
 }

@@ -1,0 +1,36 @@
+node_modules/
+node_modules
+.env
+
+# Internal Packages
+packages/@aetherspace/**/*.d.ts
+packages/@aetherspace/**/*.js
+!packages/@aetherspace/docs/addons/preset.js
+!packages/@aetherspace/docs/addons/gqlPlaygroundAddon.js
+
+# Expo
+.expo/
+
+# macOS
+.DS_Store
+
+# vscode
+.vscode
+
+# turborepo
+.turbo
+
+# next.js
+**/public/workbox-*.js
+**/public/workbox-*.js.map
+**/public/sw.js
+**/public/sw.js.map
+**/public/fallback-*.js
+
+# Vercel
+.vercel
+tsconfig.tsbuildinfo
+doppler.yaml
+
+# Storybook
+build-storybook.log

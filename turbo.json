@@ -1,0 +1,97 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "pipeline": {
+    "aetherspace#build": {
+      "outputs": [
+        "**/*.d.ts",
+        "**/*.js"
+      ],
+      "inputs": [
+        "**/*.tsx",
+        "**/*.ts"
+      ]
+    },
+    "aetherspace#link-routes": {
+      "dependsOn": ["aetherspace#build"],
+      "outputs": ["../../apps/**/app/(generated)/**"],
+      "inputs": [
+        "../../features/**/routes/**/*.tsx",
+        "../../features/**/routes/**/*.ts",
+        "../../packages/**/routes/**/*.tsx",
+        "../../packages/**/routes/**/*.ts"
+      ],
+      "cache": false
+    },
+    "aetherspace#collect-assets": {
+      "dependsOn": ["aetherspace#build"],
+      "outputs": ["../@registries/assets.generated.js"],
+      "inputs": ["../../apps/next/public/**"]
+    },
+    "aetherspace#collect-resolvers": {
+      "dependsOn": ["aetherspace#build"],
+      "outputs": ["../@registries/resolvers.generated.js"],
+      "inputs": [
+        "../../apps/**/api/**/*.tsx",
+        "../../apps/**/api/**/*.ts"
+      ]
+    },
+    "aetherspace#documentation-reset": {
+      "dependsOn": ["aetherspace#build"],
+      "cache": false
+    },
+    "aetherspace#document-components": {
+      "dependsOn": ["aetherspace#build", "aetherspace#documentation-reset"],
+      "outputs": ["packages/@registries/docs/"],
+      "inputs": [
+        "../../apps/**/*.tsx",
+        "../../features/**/*.tsx",
+        "../../packages/**/*.tsx"
+      ]
+    },
+    "aetherspace#dev-health-check": {
+      "dependsOn": ["aetherspace#build"],
+      "cache": false
+    },
+    "aetherspace#schema-test": {
+      "dependsOn": ["aetherspace#build"]
+    },
+    "next-app#dev": {
+      "dependsOn": ["aetherspace#build"],
+      "cache": false
+    },
+    "expo-app#create-next-manifest": {
+      "outputs": ["../next/public/**"]
+    },
+    "expo-app#ios": {
+      "dependsOn": ["aetherspace#dev-health-check"],
+      "cache": false
+    },
+    "expo-app#android": {
+      "dependsOn": ["aetherspace#dev-health-check"],
+      "cache": false
+    },
+    "expo-app#web": {
+      "dependsOn": ["aetherspace#dev-health-check"],
+      "cache": false
+    },
+    "expo-app#start": {
+      "dependsOn": ["aetherspace#dev-health-check"],
+      "cache": false
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        ".expo/**",
+        ".expo-shared/**",
+        ".next/**"
+      ]
+    },
+    "lint": {},
+    "deploy": {
+      "dependsOn": ["build"]
+    },
+    "dev": {
+      "cache": false
+    }
+  }
+}

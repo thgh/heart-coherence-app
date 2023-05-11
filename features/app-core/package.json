@@ -1,0 +1,12 @@
+{
+    "name": "app",
+    "version": "1.0.0",
+    "license": "MIT",
+    "scripts": {
+        "lint": "cd ../.. && eslint \"features/app-core/**/*.{ts,tsx}\""
+    },
+    "dependencies": {
+        "@expo-google-fonts/roboto": "^0.2.3",
+        "cors": "^2.8.5"
+    }
+}

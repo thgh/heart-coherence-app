@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "aetherspace-starter-demo",
+    "slug": "aetherspace-starter-demo",
+    "version": "1.0.0",
+    "privacy": "public",
+    "sdkVersion": "48.0.0",
+    "orientation": "default",
+    "icon": "../next/public/icon.png",
+    "description": "Set up your Web, iOS & Android app in minutes, and blow away the competition with write-once components that run on all platforms. Powered by Expo & Next.js",
+    "owner": "thorrstevens",
+    "githubUrl": "https://github.com/Aetherspace/green-stack-starter",
+    "scheme": "aetherspace-starter-app",
+    "splash": {
+      "image": "../next/public/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "../../**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "../next/public/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "../next/public/favicon.png"
+    }
+  }
+}

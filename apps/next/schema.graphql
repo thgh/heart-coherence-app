@@ -1,0 +1,15 @@
+input HealthCheckArgs {
+  """Echoes back the echo argument"""
+  echo: String
+}
+
+type HealthCheckResponse {
+  """Echoes back the echo argument"""
+  echo: String
+  alive: Boolean!
+  kicking: Boolean!
+}
+
+type Query {
+  healthCheck(args: HealthCheckArgs): HealthCheckResponse
+}

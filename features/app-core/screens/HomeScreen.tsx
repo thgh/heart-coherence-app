@@ -77,14 +77,7 @@ export const HomeScreen = (props: AetherProps<typeof HomePropsSchema>) => {
           // onPress={() => openLink(graphQLEndpoint || '/api/graphql')}
           accessibilityRole="button"
         >
-          <Text class="text-black roboto-bold text-sm">SomeButton</Text>
-        </Pressable>
-        <Pressable
-          class="flex-row py-1 px-2 mx-1 bg-white items-center rounded-md"
-          // onPress={() => openLink(healthEndpoint || '/api/health')}
-          accessibilityRole="button"
-        >
-          <Text class="text-black roboto-bold text-sm">OtherButton</Text>
+          <Text class="text-black roboto-bold text-sm">Enable Bluetooth</Text>
         </Pressable>
       </View>
       <Link

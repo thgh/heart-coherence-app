@@ -1,4 +1,5 @@
 import React from 'react'
+import { useWindowDimensions, ScrollView } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 // Navigation
 import { Link, fetchAetherProps, useAetherNav, useAetherRoute } from 'aetherspace/navigation'
@@ -10,6 +11,7 @@ import { View, Text, Pressable } from 'aetherspace/primitives'
 import { H1 } from 'aetherspace/html-elements'
 import { DevicePicker } from '../DevicePicker'
 import ReportsList from '../ReportsList'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 /* --- Schemas & Types ------------------------------------------------------------------------- */
 
@@ -28,12 +30,20 @@ export const HomeScreen = (props: AetherProps<typeof HomePropsSchema>) => {
 
   // -- Render --
 
+  const { height } = useWindowDimensions()
+  const { top, bottom } = useSafeAreaInsets()
+
   return (
-    <View class="relative flex w-full h-full bg-black py-12">
-      <StatusBar style="light" />
-      <DevicePicker />
-      <ReportsList />
-    </View>
+    <ScrollView contentContainerStyle={{ paddingTop: top }}>
+      <StatusBar style="light" translucent />
+      <View className="py-12">
+        <View className="justify-center" style={{ height: height - top - 200 }}>
+          <DevicePicker />
+        </View>
+
+        <ReportsList />
+      </View>
+    </ScrollView>
   )
 }
 

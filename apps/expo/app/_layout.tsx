@@ -1,5 +1,4 @@
 import { Stack } from 'expo-router'
-import RootLayout from 'app/routes/layout'
 // Config
 import tailwindConfig from 'app/tailwind.config'
 // Context
@@ -8,6 +7,7 @@ import { AetherContextManager } from 'aetherspace/context'
 import * as assets from 'registries/assets.generated'
 // Hooks
 import useLoadFonts from 'app/hooks/useLoadFonts'
+import React from 'react'
 
 /* --- <ExpoRootLayout/> ----------------------------------------------------------------------- */
 
@@ -22,17 +22,15 @@ const ExpoRootLayout = () => {
   // -- Render --
 
   return (
-    <RootLayout>
-      <AetherContextManager assets={assets} icons={{}} twConfig={tailwindConfig} isExpo isAppDir>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: '#FFFFFF' },
-            animation: 'slide_from_right',
-          }}
-        />
-      </AetherContextManager>
-    </RootLayout>
+    <AetherContextManager assets={assets} icons={{}} twConfig={tailwindConfig} isExpo isAppDir>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: '#000000' },
+          animation: 'slide_from_right',
+        }}
+      />
+    </AetherContextManager>
   )
 }
 

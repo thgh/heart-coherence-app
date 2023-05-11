@@ -1,5 +1,6 @@
-import { Pressable, Text, View } from 'aetherspace/primitives'
+import { Text, View } from 'aetherspace/primitives'
 import React, { useEffect, useState, createContext, useRef, useCallback } from 'react'
+import { Pressable, StyleSheet } from 'react-native'
 
 import { BleManager, Device, UUID } from 'react-native-ble-plx'
 import useEvent from './hooks/useEvent'
@@ -18,11 +19,26 @@ export function DevicePicker() {
   if (devices.size === 1) {
     const suggestion = devices.values().next().value
     return (
-      <View>
-        <Text className="text-white">Suggestion</Text>
-        <Text className="text-white text-xl">{suggestion.name}</Text>
-        <Pressable accessibilityRole="button" accessibilityHint="Allow bluetooth" onPress={scan}>
-          <Text className="text-white">Continue with this device</Text>
+      <View className="px-6">
+        <Text className="text-gray-500 text-lg pb-4">Suggestion</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityHint="Allow bluetooth"
+          onPress={async () => {
+            await suggestion.connect()
+            device.native.set(suggestion)
+          }}
+          style={styles.pressable}
+        >
+          <Text
+            className="text-white opacity-80 text-3xl pb-4 "
+            style={{ fontFamily: 'monospace' }}
+          >
+            {suggestion.name}
+          </Text>
+          <Text className="text-white text-lg tracking-wide uppercase font-medium text-right">
+            Continue
+          </Text>
         </Pressable>
       </View>
     )
@@ -30,25 +46,52 @@ export function DevicePicker() {
 
   if (devices.size) {
     return (
-      <View>
+      <View className="px-6">
         <Text className="text-white">Choose your device to connect to</Text>
         {Array.from(devices).map((suggestion) => (
           <View key={suggestion.id}>
             <Text className="text-white">{suggestion.name}</Text>
             <Pressable
               accessibilityRole="button"
-              accessibilityHint="Connect"
+              accessibilityHint="Allow bluetooth"
               onPress={async () => {
                 await suggestion.connect()
-                device.set(suggestion)
+                device.native.set(suggestion)
               }}
+              style={styles.pressable}
             >
-              <Text className="text-white">Connect</Text>
+              <Text
+                className="text-white opacity-80 text-3xl pb-4 "
+                style={{ fontFamily: 'monospace' }}
+              >
+                {suggestion.name}
+              </Text>
+              <Text className="text-white text-lg tracking-wide uppercase font-medium text-right">
+                Connect
+              </Text>
             </Pressable>
           </View>
         ))}
         <Pressable accessibilityRole="button" accessibilityHint="Allow bluetooth" onPress={scan}>
           <Text className="text-white">Let&apos;s go</Text>
+        </Pressable>
+
+        <Text className="text-gray-500 text-lg pb-4">Suggestion</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityHint="Allow bluetooth"
+          onPress={scan}
+          style={styles.pressable}
+        >
+          <Text
+            className="text-white opacity-80 text-3xl pb-4 "
+            style={{ fontFamily: 'monospace' }}
+          >
+            {suggestion.name}
+          </Text>
+          <Text className="text-white text-lg tracking-wide uppercase font-medium text-right">
+            Continue
+          </Text>
         </Pressable>
       </View>
     )
@@ -56,7 +99,7 @@ export function DevicePicker() {
 
   if (permission === 'denied') {
     return (
-      <View>
+      <View className="px-6">
         <Text className="text-white">Bluetooth access required!</Text>
         <Pressable accessibilityRole="button" accessibilityHint="Allow bluetooth" onPress={scan}>
           <Text className="text-white">Let&apos;s go</Text>
@@ -65,7 +108,7 @@ export function DevicePicker() {
     )
   }
   return (
-    <View>
+    <View className="px-6">
       <Text className="text-white">DevicePicker {permission}</Text>
     </View>
   )
@@ -110,7 +153,7 @@ export default function useBluetoothDevice() {
         device.id,
         device.localName,
         device.manufacturerData,
-        device.serviceData
+        device.native.serviceData
       )
     if (!device && (await dev.current?.isConnected)) {
       console.log('disconnecting', dev.current.id, dev.current.name)
@@ -202,7 +245,7 @@ export default function useBluetoothDevice() {
           if (ignore.has(key)) return
           ignore.add(key)
           if (device.serviceUUIDs?.includes(HEART_RATE) && !devices.has(device)) {
-            console.log('device', device?.id, device.name, device.serviceUUIDs)
+            console.log('device', device?.id, device.name, device.native.serviceUUIDs)
             devices.add(device)
             setDevices(new Set(devices))
           }
@@ -256,4 +299,15 @@ export default function useBluetoothDevice() {
     heart,
     rr,
   }
+}
+
+const styles = {
+  pressable: ({ pressed }) => ({
+    paddingTop: 32,
+    paddingBottom: 32,
+    paddingHorizontal: 32,
+    backgroundColor: pressed ? '#4B5563' : 'rgb(71, 85, 105)',
+    borderRadius: 12,
+    opacity: pressed ? 0.5 : 1,
+  }),
 }

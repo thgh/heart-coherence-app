@@ -7,7 +7,7 @@ export interface Session {
   startAt: string
   endAt?: string
   score: number
-  rates: { at: number; rate: number }[]
+  heartRates: { at: number; value: number }[]
 }
 
 export const manager = observable(null as null | BleManager)
@@ -24,7 +24,7 @@ export const state = observable({
   deviceUuid: '',
   /** Preference that indicates that app should connect immediately to whatever device */
   autoConnect: false,
-  session: null as null | Session,
+  session: null as unknown as Session,
   /** Sorted */
   sessions: [] as Session[],
 })

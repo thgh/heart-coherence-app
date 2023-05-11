@@ -27,7 +27,7 @@ export function DevicePicker() {
           accessibilityRole="button"
           accessibilityHint="Connect to device"
           onPress={async () => {
-            await suggestion.connect()
+            await addDeviceListener(suggestion)
             deviceState.native.set(suggestion)
             openLink('/session')
           }}
@@ -52,8 +52,9 @@ export function DevicePicker() {
             accessibilityRole="button"
             accessibilityHint="Connect to device"
             onPress={async () => {
-              await suggestion.connect()
+              await addDeviceListener(suggestion)
               deviceState.native.set(suggestion)
+              openLink('/session')
             }}
             style={styles.pressable}
           >
@@ -309,4 +310,37 @@ const styles = {
     borderRadius: 12,
     opacity: pressed ? 0.5 : 1,
   }),
+}
+
+async function addDeviceListener(device: Device) {
+  // Create new session
+  if (state.session.peek()) {
+    console.warn('Session already exists!')
+  }
+  state.session.set({
+    heartRates: [],
+    score: 0,
+    startAt: new Date().toJSON(),
+  })
+
+  await device.connect()
+
+  device.discoverAllServicesAndCharacteristics()
+
+  const start = Date.now()
+  state.session.startAt.set(new Date(start).toJSON())
+
+  device.monitorCharacteristicForService(HEART_RATE, HEART_RATE_MEASUREMENT, (error, char) => {
+    if (!char || !char.value) return console.log('char err', error)
+
+    const buffer = Buffer.from(char.value, 'base64')
+    const bytes = new Uint8Array(buffer.toJSON().data)
+    state.session.heartRates.push({ at: Date.now() - start, value: bytes[1] })
+    console.log('rate', char.value, bytes, bytes[1])
+
+    // for (let index = 2; index < bytes.length; index += 2) {
+    //   const ms = bytes[index + 1] * 256 + bytes[index]
+    //   rr.current.push(ms)
+    // }
+  })
 }

@@ -7,7 +7,7 @@ export interface Session {
   startAt: string
   endAt?: string
   score: number
-  rates: number[]
+  rates: { at: number; rate: number }[]
 }
 
 export const manager = observable(null as null | BleManager)
@@ -15,13 +15,15 @@ export const manager = observable(null as null | BleManager)
 export const device = observable({
   web: null as null | Device,
   native: null as null | Device,
-  autoConnect: true,
+  /** Indicates if autoconnect has run in this pageload */
+  hasAutoConnected: false,
 })
 
 export const state = observable({
   /** Latest connected device uuid that will connect automatically */
   deviceUuid: '',
-  autoConnect: true,
+  /** Preference that indicates that app should connect immediately to whatever device */
+  autoConnect: false,
   session: null as null | Session,
   /** Sorted */
   sessions: [] as Session[],

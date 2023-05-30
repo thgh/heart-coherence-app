@@ -36,7 +36,7 @@
     "patch-package": "^6.5.1",
     "prettier": "^2.8.4",
     "prettier-eslint": "^15.0.1",
-    "turbo": "^1.8.3",
+    "turbo": "^1.9.9",
     "webpack": "*",
     "webpack-merge": "^5.8.0"
   },
@@ -52,6 +52,7 @@
     "dev": "yarn turbo run next-app#dev expo-app#start",
     "dev:mobile": "yarn turbo run next-app#dev expo-app#ios & yarn storybook:wait",
     "dev:docs": "yarn dev & yarn storybook:wait",
+    "d": "(cd apps/expo && npx expo start --android)",
     "web": "yarn turbo run next-app#dev",
     "ios": "yarn turbo run next-app#dev expo-app#ios",
     "android": "yarn turbo run next-app#dev expo-app#android",

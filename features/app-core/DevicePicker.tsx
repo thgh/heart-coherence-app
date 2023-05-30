@@ -2,10 +2,11 @@ import { Text, View } from 'aetherspace/primitives'
 import { useAetherNav } from 'aetherspace/navigation'
 import React, { useEffect, useState, createContext, useRef, useCallback } from 'react'
 import { Pressable, StyleSheet } from 'react-native'
+import { Buffer } from 'buffer'
 
 import { BleManager, Device, UUID } from 'react-native-ble-plx'
 import useEvent from './hooks/useEvent'
-import { device as deviceState, manager, state } from './global-state'
+import { Session, device as deviceState, manager, state } from './global-state'
 
 import { requestMultiple, PERMISSIONS, checkMultiple } from 'react-native-permissions'
 import { ScanCallbackType } from 'react-native-ble-plx'
@@ -97,7 +98,9 @@ export function DevicePicker() {
           onPress={scan}
           style={styles.pressable}
         >
-          <Text className="text-white opacity-80 text-xl pb-12">Bluetooth access required!</Text>
+          <Text className="text-white opacity-80 text-3xl pb-12">
+            Plug in your heart rate monitor
+          </Text>
           <Text className="text-white text-lg tracking-wide uppercase font-medium text-right">
             Find your device
           </Text>
@@ -312,9 +315,24 @@ const styles = {
   }),
 }
 
+export async function disconnect() {
+  const sub = deviceState.nativeCharacteristicMonitor.get()
+  if (sub) {
+    sub.remove()
+    // @ts-expect-error
+    deviceState.nativeCharacteristicMonitor.set(null)
+  }
+
+  console.log('disconnect')
+  const session = state.session.peek()
+  state.sessions.push(session)
+  state.session.set(null as unknown as Session)
+  deviceState.native.set(null)
+}
+
 async function addDeviceListener(device: Device) {
   // Create new session
-  if (state.session.peek()) {
+  if (state.session.get()) {
     console.warn('Session already exists!')
   }
   state.session.set({
@@ -325,22 +343,33 @@ async function addDeviceListener(device: Device) {
 
   await device.connect()
 
-  device.discoverAllServicesAndCharacteristics()
+  await device.discoverAllServicesAndCharacteristics()
 
   const start = Date.now()
   state.session.startAt.set(new Date(start).toJSON())
 
-  device.monitorCharacteristicForService(HEART_RATE, HEART_RATE_MEASUREMENT, (error, char) => {
-    if (!char || !char.value) return console.log('char err', error)
+  const sub = device.monitorCharacteristicForService(
+    HEART_RATE,
+    HEART_RATE_MEASUREMENT,
+    (error, char) => {
+      if (!char || !char.value) return console.log('char err', error)
 
-    const buffer = Buffer.from(char.value, 'base64')
-    const bytes = new Uint8Array(buffer.toJSON().data)
-    state.session.heartRates.push({ at: Date.now() - start, value: bytes[1] })
-    console.log('rate', char.value, bytes, bytes[1])
+      const buffer = Buffer.from(char.value, 'base64')
+      const bytes = new Uint8Array(buffer.toJSON().data)
+      // state.session.heartRates.set((x) => {
+      //   console.log('getp', x)
+      //   return x.concat({ at: Date.now() - start, value: bytes[1] })
+      // })
+      state.session.heartRates.push({ at: Date.now() - start, value: bytes[1] })
 
-    // for (let index = 2; index < bytes.length; index += 2) {
-    //   const ms = bytes[index + 1] * 256 + bytes[index]
-    //   rr.current.push(ms)
-    // }
-  })
+      console.log('rate', char.value, bytes, bytes[1])
+
+      // for (let index = 2; index < bytes.length; index += 2) {
+      //   const ms = bytes[index + 1] * 256 + bytes[index]
+      //   rr.current.push(ms)
+      // }
+    }
+  )
+
+  deviceState.nativeCharacteristicMonitor.set(sub)
 }

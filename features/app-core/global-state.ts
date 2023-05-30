@@ -1,7 +1,7 @@
 import './global-state-persist'
 import { observable } from '@legendapp/state'
 import { persistObservable } from '@legendapp/state/persist'
-import { BleManager, Device } from 'react-native-ble-plx'
+import { BleManager, Device, Subscription } from 'react-native-ble-plx'
 
 export interface Session {
   startAt: string
@@ -15,6 +15,7 @@ export const manager = observable(null as null | BleManager)
 export const device = observable({
   web: null as null | Device,
   native: null as null | Device,
+  nativeCharacteristicMonitor: null as unknown as Subscription,
   /** Indicates if autoconnect has run in this pageload */
   hasAutoConnected: false,
 })

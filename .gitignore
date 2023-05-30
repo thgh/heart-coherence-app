@@ -1,6 +1,8 @@
 node_modules/
 node_modules
 .env
+*.apk
+*.abb
 
 # Internal Packages
 packages/@aetherspace/**/*.d.ts

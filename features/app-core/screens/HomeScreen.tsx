@@ -11,7 +11,7 @@ import { View, Text, Pressable } from 'aetherspace/primitives'
 import { H1 } from 'aetherspace/html-elements'
 // Components
 import { DevicePicker } from '../DevicePicker'
-import ReportsList from '../ReportsList'
+import SessionHistoryList from '../SessionHistoryList'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 /* --- Schemas & Types ------------------------------------------------------------------------- */
@@ -38,7 +38,7 @@ export const HomeScreen = (props: AetherProps<typeof HomeScreenPropsSchema>) => 
           <DevicePicker />
         </View>
 
-        <ReportsList />
+        <SessionHistoryList />
       </View>
     </ScrollView>
   )

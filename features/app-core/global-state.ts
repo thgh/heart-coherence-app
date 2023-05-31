@@ -7,7 +7,7 @@ export interface Session {
   startAt: string
   endAt?: string
   score: number
-  heartRates: { at: number; value: number }[]
+  heartRates: { at: number; value: number; intervals: number[] }[]
 }
 
 export const manager = observable(null as null | BleManager)
@@ -15,7 +15,7 @@ export const manager = observable(null as null | BleManager)
 export const device = observable({
   web: null as null | Device,
   native: null as null | Device,
-  nativeCharacteristicMonitor: null as unknown as Subscription,
+  nativeCharacteristicMonitor: null as Subscription | null,
   /** Indicates if autoconnect has run in this pageload */
   hasAutoConnected: false,
 })

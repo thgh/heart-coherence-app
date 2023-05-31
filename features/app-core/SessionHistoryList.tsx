@@ -2,7 +2,7 @@ import { Text, View } from 'aetherspace/primitives'
 import React from 'react'
 import { state } from './global-state'
 
-export default function ReportsList() {
+export default function SessionHistoryList() {
   return (
     <View className="p-6 flex flex-col gap-4">
       {state.sessions.map((session, id) => (

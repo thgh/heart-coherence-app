@@ -4,7 +4,7 @@ import React, { useEffect, useState, createContext, useRef, useCallback } from '
 import { Pressable, StyleSheet } from 'react-native'
 import { Buffer } from 'buffer'
 
-import { BleManager, Device, UUID } from 'react-native-ble-plx'
+import { BleAndroidErrorCode, BleErrorCode, BleManager, Device, UUID } from 'react-native-ble-plx'
 import useEvent from './hooks/useEvent'
 import { Session, device as deviceState, manager, state } from './global-state'
 
@@ -13,7 +13,7 @@ import { ScanCallbackType } from 'react-native-ble-plx'
 
 const HEART_RATE: UUID = '0000180d-0000-1000-8000-00805f9b34fb'
 const HEART_RATE_MEASUREMENT: UUID = '00002a37-0000-1000-8000-00805f9b34fb'
-const graphItems = 30
+// const graphItems = 30
 
 export function DevicePicker() {
   const { openLink } = useAetherNav()
@@ -36,7 +36,7 @@ export function DevicePicker() {
         >
           <Text className="text-white opacity-80 text-3xl pb-12">{suggestion.name}</Text>
           <Text className="text-white text-lg tracking-wide uppercase font-medium text-right">
-            Continue
+            Start session
           </Text>
         </Pressable>
       </View>
@@ -318,9 +318,17 @@ const styles = {
 export async function disconnect() {
   const sub = deviceState.nativeCharacteristicMonitor.get()
   if (sub) {
+    console.log('remove listener')
     sub.remove()
     // @ts-expect-error
     deviceState.nativeCharacteristicMonitor.set(null)
+  }
+
+  const device = deviceState.native.peek()
+  if (await device?.isConnected()) {
+    console.log('disconnecting')
+    await device?.cancelConnection()
+    console.log('disconnected')
   }
 
   console.log('disconnect')
@@ -341,7 +349,12 @@ async function addDeviceListener(device: Device) {
     startAt: new Date().toJSON(),
   })
 
-  await device.connect()
+  if (!(await device.isConnected())) {
+    console.log('connect')
+    await device.connect()
+  } else {
+    console.log('reuse existing connected device')
+  }
 
   await device.discoverAllServicesAndCharacteristics()
 
@@ -352,7 +365,40 @@ async function addDeviceListener(device: Device) {
     HEART_RATE,
     HEART_RATE_MEASUREMENT,
     (error, char) => {
-      if (!char || !char.value) return console.log('char err', error)
+      // When starting and stopping a session in quick succession, this error is thrown
+      // It is recoverable by restarting the monitor
+      if (error && error.name === 'BleError' && error.errorCode === BleErrorCode.ServiceNotFound) {
+        console.log('service not found, recovering')
+        sub.remove()
+        deviceState.nativeCharacteristicMonitor.set(null)
+        setTimeout(() => addDeviceListener(device), 600)
+        return
+      }
+
+      // When stopping the monitor, this error is thrown
+      // That's fine
+      if (
+        error &&
+        error.name === 'BleError' &&
+        error.errorCode === BleErrorCode.OperationCancelled
+      ) {
+        console.log('monitor cancelled')
+        sub.remove()
+        deviceState.nativeCharacteristicMonitor.set(null)
+        return
+      }
+      if (error)
+        console.log(
+          'BleError',
+          error.message,
+          error.name,
+          error.androidErrorCode,
+          error.attErrorCode,
+          error.errorCode,
+          error.reason,
+          error.iosErrorCode
+        )
+      if (!char || !char.value) return console.log('impossible???', char, error)
 
       const buffer = Buffer.from(char.value, 'base64')
       const bytes = new Uint8Array(buffer.toJSON().data)
@@ -360,14 +406,16 @@ async function addDeviceListener(device: Device) {
       //   console.log('getp', x)
       //   return x.concat({ at: Date.now() - start, value: bytes[1] })
       // })
-      state.session.heartRates.push({ at: Date.now() - start, value: bytes[1] })
 
-      console.log('rate', char.value, bytes, bytes[1])
-
-      // for (let index = 2; index < bytes.length; index += 2) {
-      //   const ms = bytes[index + 1] * 256 + bytes[index]
-      //   rr.current.push(ms)
-      // }
+      const intervals: number[] = []
+      for (let index = 2; index < bytes.length; index += 2) {
+        intervals.push(bytes[index + 1] * 256 + bytes[index])
+      }
+      if (intervals.length) {
+        const data = { at: Date.now() - start, value: bytes[1], intervals }
+        console.log('rate', data)
+        state.session.heartRates.push(data)
+      }
     }
   )
 
